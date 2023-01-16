@@ -40,13 +40,9 @@ void smooth(
   Eigen::MatrixXd dense_L;
   dense_L = Eigen::MatrixXd(L);
 
-
-  // metodo 2
   Eigen::SparseMatrix<double> sparse_M;
   sparse_M = Eigen::SparseMatrix<double>(M);
-
-  // Solve (M-delta*L) U = M*U
-  //  const auto & S = (dense_M - 0.001* L);  original
+    
   const auto &S = (sparse_M - lambda * L);
   Eigen::SimplicialLLT<Eigen::SparseMatrix<double>> solver(S);
   assert(solver.info() == Eigen::Success);
@@ -68,38 +64,5 @@ bool compare(double x, double y, double epsilon = 0.0000001f)
 
 - confronto massMatrix con igl_massMatrix
 - confronto cotMatrix con igl_cotMatrix
-
-
-* test mass matrix
-
-    Eigen::SparseMatrix<double> MassMatrix = Eigen::SparseMatrix<double>();
-    igl::MassMatrixType type = igl::MASSMATRIX_TYPE_BARYCENTRIC;
-    igl::massmatrix(V, F, type, MassMatrix);
-
-
-    for (int i = 0; i < 10; ++i)
-    {
-      std::cout << "myFunct: " << M.diagonal()[i] << std::endl;
-      std::cout << "LibrFunct: " << MassMatrix.coeff(i, i) << std::endl;
-    }
-
-
-
-  *test cotmatrix
-  Eigen::SparseMatrix<double> L_igl = Eigen::SparseMatrix<double>(V.rows(), V.rows());
-  igl::cotmatrix(V, F, L_igl);
-  std::cout << "ho fatto igl cotmatrix" << std::endl;
-
-  for (int i = 0; i < L.rows(); i++)
-  {
-    for (int j = 0; j < L.cols(); j++)
-    {
-      if (!compare(L.coeff(i, j), L_igl.coeff(i, j), 0.0000001f))
-      {
-        std::cout << "Elementi diversi: " << L.coeff(i, j) << " // " << L_igl.coeff(i, j);
-      }
-    }
-  }
-  std::cout << "Ho finito il confronto" << std::endl;
 
 */
